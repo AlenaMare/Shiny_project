@@ -1,0 +1,90 @@
+---
+title: "My first App_Developing data products"
+author: "AM"
+date: "2022-12-09"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 1. Introduction
+
+For the project I used Iris dataset. Shiny application was used to check the iris data attribude by Sepal.length, Sepal.Width, Petal.length, Petal.Width using histogram.
+
+The dataset consists of 50 samples of 3 different species of iris.
+
+In the presentation you will find ui.R file (information about slider bar) and server.R (information how to build the histogram).
+
+## 2. Data exploration
+
+```{r, echo = TRUE}
+head(iris)
+dim(iris)
+```
+
+## 3. Slide with ui.R code
+
+```{r, echo = TRUE}
+library(shiny)
+
+# Define ui for Iris data that draws a histogram
+shinyUI <- fluidPage(
+  titlePanel("Iris Data Explorer"),
+  
+  # Sidebar with radio buttons for attribute option and a slider input for bins range 
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Select the attribute to know the variation of each measurement "),
+      
+      radioButtons("option", "Choose Iris attribute:", list("Sepal.Length"='a', "Sepal.Width"='b', "Petal.Length"='c', "Petal.Width"='d')),
+      sliderInput("bins",
+                  "Slide me to check the histogram of each attribute",
+                  min = 1,
+                  max = 50,
+                  value = 30)
+    ),
+    
+    # Visualization of Iris Dataset through Histogram
+    mainPanel(
+      mainPanel(plotOutput("distPlot"))
+    )
+  )
+)
+```
+
+## 4. Slide with server.R code
+
+```{r, echo = TRUE}
+server <- function(input, output) {
+    
+    output$distPlot <- renderPlot({
+        if(input$option=='a'){       
+            i<-1     }     
+        if(input$option=='b'){       
+            i<-2     }     
+        if(input$option=='c'){       
+            i<-3     }     
+        if(input$option=='d'){       
+            i<-4     }
+        
+        # generate bins based on input$bins from ui.R
+        x    <- iris[, i] 
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+        
+        # draw the histogram with the specified bins range
+        hist(x, main = "Histogram of Iris Dataset", xlab = "Iris Attribute", ylab = "Frequency", breaks = bins, col = 'blue', border = 'white')
+    })
+}
+```
+
+## 5. Additional resources
+
+1. Github link to ur.R and server.R files
+
+https://github.com/AlenaMare/Shiny_project
+
+2. Shinpy app
+
+https://alenacize.shinyapps.io/alenamare/
